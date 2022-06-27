@@ -1,0 +1,9 @@
+.example-button-row button,
+.example-button-row a {
+  margin: 8px;
+  padding: 5px;
+}
+
+.mat-card {
+    background: #DCEBF1;
+}
