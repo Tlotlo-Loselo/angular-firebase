@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
+import { AuthService } from '../services/auth.service';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -11,19 +13,10 @@ export class LoginComponent implements OnInit {
 
   hide = true;
 
-  constructor(private auth: Auth) { }
+  constructor(public authService: AuthService) { }
 
   ngOnInit(): void {
   }
 
-  handleLogin(value: any) {
-    signInWithEmailAndPassword(this.auth, value.email, value.password)
-    .then((Response: any) => {
-      console.log(Response.user)
-    })
-    .catch((err) => {
-      alert(err.message);
-    })
-  }
 
 }
