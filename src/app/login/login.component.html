@@ -1,29 +1,39 @@
-<mat-card class="top-panel">
+<mat-card class="top-panel mat-elevation-z5">
   <div class="example-button-row">
       <button mat-raised-button color="primary" routerLink="/home">Home</button>
   </div>
 </mat-card>
 
 <mat-card class="form-card">
-  <form #loginForm ="ngForm" >
+  <h1>Log in</h1>
+  <form [formGroup]="loginForm" (ngSubmit)="submit()">
       <div class="email-container input-fields">
           <mat-form-field appearance="fill">
               <mat-label>Enter your email</mat-label>
-              <input matInput placeholder="pat@example.com" ngModel name="email" id="email" #userName required>
-<!--                <mat-error *ngIf="loginForm.invalid">{{getErrorMessage()}}</mat-error>      -->
+              <input matInput placeholder="pat@example.com" ngModel formControlName="email" #userEmail required>
+                <mat-error *ngIf="email?.errors?.['required']"> Email is required </mat-error>   
+                <mat-error *ngIf="email?.errors?.['email']"> Please enter the correct email format </mat-error>   
           </mat-form-field>
       </div>
 
       <div class="password-container input-fields">
           <mat-form-field appearance="fill">
               <mat-label>Enter your password</mat-label>
-              <input matInput [type]="hide ? 'password' : 'text'" ngModel name="password" id="password" #userPassword required>
+              <input matInput [type]="hide ? 'password' : 'text'" ngModel formControlName="password" #userPassword required>
+              <mat-error *ngIf="email?.errors?.['required']"> Password is required </mat-error> 
               <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                 <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
               </button>
           </mat-form-field>
       </div>
 
-      <button mat-raised-button class="btn-submit" color="primary" (click)="authService.Login(userName.value, userPassword.value)">Login</button>
+      <button mat-raised-button class="btn-submit" color="primary" type="submit">Login</button>
   </form>
+  <div class="redirectToLogin">
+    <span>Don't have an account?
+      <span class="redirect">
+        <a routerLink="/signup">Sign Up</a>
+      </span>
+    </span>
+  </div>
 </mat-card>

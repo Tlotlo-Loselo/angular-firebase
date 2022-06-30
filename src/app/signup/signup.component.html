@@ -1,4 +1,4 @@
-<mat-card class="top-panel">
+<mat-card class="top-panel mat-elevation-z5">
     <div class="example-button-row">
         <button mat-raised-button color="primary" routerLink="/home">Home</button>
     </div>
@@ -7,27 +7,67 @@
 
 
 
-<mat-card class="form-card">
-    <form #loginForm ="ngForm">
+<mat-card class="form-card ">
+
+    <h1>Sign Up</h1>
+    <form [formGroup]="signupForm" (ngSubmit)="signup()">
+
+        <div class="email-container input-fields">
+            <mat-form-field appearance="fill">
+                <mat-label>Enter your first name.</mat-label>
+                <input matInput placeholder="Pat" ngModel formControlName="firstName" #userName required>
+                  <mat-error *ngIf="firstName?.errors?.['required']"> First name is required </mat-error>     
+            </mat-form-field>
+        </div>
+
+        <div class="email-container input-fields">
+            <mat-form-field appearance="fill">
+                <mat-label>Enter surname</mat-label>
+                <input matInput placeholder="Noah" ngModel formControlName="lastName" #surname required>
+                <mat-error *ngIf="lastName?.errors?.['required']"> Last name is required </mat-error> 
+            </mat-form-field>
+        </div>
+        <div class="email-container input-fields">
+            <mat-form-field appearance="fill">
+                <mat-label>Gender</mat-label>
+                <mat-select #userGender formControlName="gender">
+                  <mat-option value="Male">Male</mat-option>
+                  <mat-option value="Female">Female</mat-option>
+                </mat-select>
+                <mat-hint>Gender required</mat-hint>
+              </mat-form-field>
+        </div>
+
         <div class="email-container input-fields">
             <mat-form-field appearance="fill">
                 <mat-label>Enter your email</mat-label>
-                <input matInput placeholder="pat@example.com" ngModel name="email" #userEmail required>
-<!--                <mat-error *ngIf="loginForm.invalid">{{getErrorMessage()}}</mat-error>      -->
+                <input matInput placeholder="pat@example.com" ngModel formControlName="email" #userEmail required>
+                <mat-error *ngIf="email?.errors?.['required']"> Email is required </mat-error>   
+                <mat-error *ngIf="email?.errors?.['email']"> Please enter the correct email format </mat-error> 
             </mat-form-field>
         </div>
 
         <div class="password-container input-fields">
             <mat-form-field appearance="fill">
                 <mat-label>Enter your password</mat-label>
-                <input matInput [type]="hide ? 'password' : 'text'" ngModel name="password" #userPwd required>
+                <input matInput [type]="hide ? 'password' : 'text'" ngModel formControlName="password" #userPwd required>
+                <mat-error *ngIf="password?.errors?.['required']"> Password is required </mat-error>  
                 <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                   <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </button>
             </mat-form-field>
         </div>
 
-        <button mat-raised-button class="btn-submit" color="primary" (click)="authService.SignUp(userEmail.value, userPwd.value)">Signup</button>
+        <div class="password-container input-fields">
+            <mat-form-field appearance="fill">
+                <mat-label>Password</mat-label>
+                <input autocomplete="off" formControlName="confirmPassword" type="password" matInput placeholder="password" required> 
+                <mat-error *ngIf="confirmPassword?.errors?.['required']"> Password is required </mat-error>  
+                <mat-error *ngIf="confirmPassword?.errors?.['passwordsDontMatch']"> Password should match </mat-error> 
+            </mat-form-field> 
+        </div>
+
+        <button mat-raised-button class="btn-submit" color="primary" type="submit">Signup</button>
     </form>
 
     <div class="redirectToLogin">

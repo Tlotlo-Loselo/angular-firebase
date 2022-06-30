@@ -2,24 +2,29 @@
   background: #DCEBF1;
 }
 
-.grid-container {
-  margin: 20px;
+.example-button-row {
+  flex: 1 1 auto;
 }
 
-.dashboard-card {
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  right: 15px;
-  bottom: 15px;
+.example-button-row button,
+.example-button-row a {
+  margin-right: 8px;
+
 }
+
+
+.profile-image img {
+  /*border-radius: 100%;*/
+  object-fit: cover;
+  object-position: center;
+}
+
+
+
+
 
 .more-button {
   position: absolute;
   top: 5px;
   right: 10px;
-}
-
-.dashboard-card-content {
-  text-align: center;
 }
