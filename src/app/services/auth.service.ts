@@ -7,9 +7,9 @@ import * as auth from 'firebase/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat/firestore';
 
 import { Router } from '@angular/router';
-import { from } from 'rxjs';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { Auth, authState } from '@angular/fire/auth';
+import { concatMap, from, Observable, of, switchMap } from 'rxjs';
+import { signInWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { Auth, authState, createUserWithEmailAndPassword } from '@angular/fire/auth';
 import { HotToastService } from '@ngneat/hot-toast';
 
 @Injectable({
@@ -35,9 +35,22 @@ export class AuthService {
 
   // Sign up with email/password
 
+    signupUser(fName: string, lName: string, email: string, password: string) {
+      return from(createUserWithEmailAndPassword(this.auth, email, password))
+      .pipe(
+        switchMap(({ user }) => updateProfile(user, {displayName: fName + ' ' + lName})),
+        this.toast.observe({
+          success: 'Congrats! You have signed up.',
+          loading: 'Signing in.',
+          error: ({ message }) => `${message}`
+        })
+      )
+      .subscribe(() => {
+        this.router.navigate(['/dashboard'])
+      });
+    }
 
-
-  signupUser(user: any): Promise<any> {
+  /*signupUser(user: any): Promise<any> {
     return this.afAuth.createUserWithEmailAndPassword(user.email, user.password)
       .then((result) => {
         let emailLower = user.email.toLowerCase();
@@ -53,20 +66,16 @@ export class AuthService {
             email_lower: emailLower
           });
 
-        this.toast.observe({
-          success: 'Congrats! You have signed up',
-          loading: 'Signing in.',
-          error: ({ message }) => `${message}`
-        })
+        
       })
       .catch(error => {
         console.log('Auth Service: signup error', error);
         if (error.code)
           return { isValid: false, message: error.message };
       });
-  }
+  }*/
 
- /* SignUp(email: string, password: string, name: string, lastNAme: string, gender: string) {
+ /* SignUp(user: any): Promise<any> {
     return this.afAuth
       .createUserWithEmailAndPassword(email, password)
       .then((result) => {
@@ -117,9 +126,9 @@ export class AuthService {
 
   // Setting the user data
   
-  SetUserData(user: any) {
+  /*SetUserData(user: any) {
     const userRef: AngularFirestoreDocument<any> = this.afs.doc(
-      `users/${user.uid}`
+      `users/${user.email_lower}`
     );
     const userData: User = {
       uid: user.uid,
@@ -127,12 +136,24 @@ export class AuthService {
       firstName: user.firstName,
       lastNAme: user.lastNAme,
       gender: user.gender,
-      emailVerified: user.emailVerified,
     };
     return userRef.set(userData, {
       merge: true,
     });
-  }
+  }*/
+
+  /*updateProfileData(profileData: Partial<UserInfo>): Observable<any> {
+    const user = this.auth.currentUser;
+
+    return of(user).pipe(
+      concatMap(user => {
+        if (!user) throw new Error('Not Authenticated');
+
+        return updateProfile(user, profileData)
+      })
+    )
+
+  }*/
 
   
 

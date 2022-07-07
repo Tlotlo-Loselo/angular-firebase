@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { map } from 'rxjs/operators';
+import { concatMap, map } from 'rxjs/operators';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { AuthService } from '../services/auth.service';
+import { User } from 'firebase/auth';
+import { ImageUploadService } from '../services/image-upload.service';
+import { HotToastService } from '@ngneat/hot-toast';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,30 +15,40 @@ import { AuthService } from '../services/auth.service';
 export class DashboardComponent implements OnInit {
 
   user$ = this.authService.currentUser$;
-  /** Based on the screen size, switch from standard to one column per row */
-  cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
-    map(({ matches }) => {
-      if (matches) {
-        return [
-          { title: 'Card 1', cols: 1, rows: 1 },
-          { title: 'Card 2', cols: 1, rows: 1 },
-          { title: 'Card 3', cols: 1, rows: 1 },
-          { title: 'Card 4', cols: 1, rows: 1 }
-        ];
-      }
 
-      return [
-        { title: 'Card 1', cols: 2, rows: 1 },
-        { title: 'Card 2', cols: 1, rows: 1 },
-        { title: 'Card 3', cols: 1, rows: 2 },
-        { title: 'Card 4', cols: 1, rows: 1 }
-      ];
-    })
+  profileForm = new FormGroup (
+    {
+      uid: new FormControl(''),
+      email: new FormControl(''),
+      displayName: new FormControl(''),
+      firstName: new FormControl(''),
+      lastNAme: new FormControl(''),
+      gender: new FormControl(''),
+      //address: new FormControl(''),
+      //phone: new FormControl(''),
+    }
   );
 
-  constructor(private breakpointObserver: BreakpointObserver, public authService: AuthService) {}
+  constructor(
+    private breakpointObserver: BreakpointObserver, 
+    public authService: AuthService, 
+    //private imageUploadService: ImageUploadService,
+    private toast: HotToastService) {}
 
   ngOnInit(): void {
     
   }
+
+/*  uploadImage(event: any, user: User) {
+    this.imageUploadService.uploadImage(event.target.files[0], `images/profile/${user.uid}`).pipe(
+      this.toast.observe(
+        {
+          loading: 'Image is being loaded...',
+          success: 'Image uploaded successfully',
+          error: 'There was an error'
+        }
+      ),
+      //concatMap((photoURL) => this.authService.updateProfileData({photoURL}))
+    ).subscribe();
+  }     */
 }

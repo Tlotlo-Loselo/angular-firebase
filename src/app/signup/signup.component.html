@@ -12,7 +12,7 @@
     <h1>Sign Up</h1>
     <form [formGroup]="signupForm" (ngSubmit)="signup()">
 
-        <div class="email-container input-fields">
+        <div class="first-name-container input-fields">
             <mat-form-field appearance="fill">
                 <mat-label>Enter your first name.</mat-label>
                 <input matInput placeholder="Pat" ngModel formControlName="firstName" #userName required>
@@ -20,14 +20,14 @@
             </mat-form-field>
         </div>
 
-        <div class="email-container input-fields">
+        <div class="last-name-container input-fields">
             <mat-form-field appearance="fill">
                 <mat-label>Enter surname</mat-label>
                 <input matInput placeholder="Noah" ngModel formControlName="lastName" #surname required>
                 <mat-error *ngIf="lastName?.errors?.['required']"> Last name is required </mat-error> 
             </mat-form-field>
         </div>
-        <div class="email-container input-fields">
+<!--        <div class="gender-container input-fields">
             <mat-form-field appearance="fill">
                 <mat-label>Gender</mat-label>
                 <mat-select #userGender formControlName="gender">
@@ -37,7 +37,7 @@
                 <mat-hint>Gender required</mat-hint>
               </mat-form-field>
         </div>
-
+-->
         <div class="email-container input-fields">
             <mat-form-field appearance="fill">
                 <mat-label>Enter your email</mat-label>
@@ -58,13 +58,13 @@
             </mat-form-field>
         </div>
 
-        <div class="password-container input-fields">
+        <div class="confirm-password-container input-fields">
             <mat-form-field appearance="fill">
                 <mat-label>Password</mat-label>
                 <input autocomplete="off" formControlName="confirmPassword" type="password" matInput placeholder="password" required> 
                 <mat-error *ngIf="confirmPassword?.errors?.['required']"> Password is required </mat-error>  
-                <mat-error *ngIf="confirmPassword?.errors?.['passwordsDontMatch']"> Password should match </mat-error> 
             </mat-form-field> 
+            <mat-error class="margin" *ngIf="signupForm?.errors?.['passwordsDontMatch']"> Password should match </mat-error> 
         </div>
 
         <button mat-raised-button class="btn-submit" color="primary" type="submit">Signup</button>

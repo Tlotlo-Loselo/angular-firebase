@@ -2,9 +2,12 @@ export interface User {
 
     uid: string;
     email: string;
+    displayName: string;
+    photoURL:string;
     firstName: string;
     lastNAme: string;
     gender: string;
-    emailVerified: boolean;
+    //address: string;
+    //phone: string;
     
 }

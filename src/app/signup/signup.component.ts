@@ -4,6 +4,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 import { FormsModule, ReactiveFormsModule , FormGroup, FormControl, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Router } from '@angular/router';
+import { first } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
 export function passwordsMatchValidator(): ValidatorFn{     //Cross Validation
@@ -43,7 +44,7 @@ export class SignupComponent implements OnInit {
   signupForm = new FormGroup({
   firstName: new FormControl('', Validators.required),
   lastName: new FormControl('', Validators.required),
-  gender: new FormControl('', Validators.required),
+  //gender: new FormControl('', Validators.required),
   email: new FormControl('', [Validators.required, Validators.email]),
   password: new FormControl('',Validators.required),
   confirmPassword: new FormControl('', Validators.required)
@@ -54,6 +55,15 @@ export class SignupComponent implements OnInit {
   }
 
   signup() {
+    if (!this.signupForm.valid)
+      return;
+    
+    const { firstName, lastName, email, password } = this.signupForm.value;
+    this.authService.signupUser(firstName, lastName, email, password)
+
+  }
+
+  /*signup() {
     if (this.signupForm.invalid)                            // if there's an error in the form, don't submit it
         return;
 
@@ -68,7 +78,7 @@ export class SignupComponent implements OnInit {
     }).catch(() => {
         this.isProgressVisible = false;
     });
-  }
+  }*/
 
   get firstName() {
     return this.signupForm.get('firstName');
