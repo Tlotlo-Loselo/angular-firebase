@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { docData, Firestore } from '@angular/fire/firestore';
-import { doc, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { from, Observable, of, switchMap } from 'rxjs';
 import { AuthService } from './auth.service';
 import { User } from './user';
@@ -14,7 +14,7 @@ export class UsersService {
     return this.auth.currentUser$.pipe(
       switchMap(user => {
         if (!user?.uid){
-          return of(null)
+          return of(null);
         }
 
         const ref = doc(this.firestore, 'users', user.uid);
@@ -26,14 +26,25 @@ export class UsersService {
 
   constructor(private firestore: Firestore, private auth: AuthService) { }
 
+
+
+
+  /******  C R U D  ******/
+  //CREATE USER
+
   addUser(user: User) : Observable<any> {
     const ref = doc(this.firestore, 'users', user.uid)
     return from(setDoc(ref, user));
   }
-
+  //UPDATE USER
   updateUser(user: User) : Observable<any> {
     const ref = doc(this.firestore, 'users', user.uid)
     return from(updateDoc(ref, {...user}));
+  }
+
+  deleteUser(user: User) : Observable<any> {
+    const ref = doc(this.firestore, 'users', user.uid)
+    return from(deleteDoc(ref));
   }
   
 

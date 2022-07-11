@@ -4,8 +4,10 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 import { FormsModule, ReactiveFormsModule , FormGroup, FormControl, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Router } from '@angular/router';
-import { first } from 'rxjs';
+import { HotToastService } from '@ngneat/hot-toast';
+import { first, switchMap } from 'rxjs';
 import { AuthService } from '../services/auth.service';
+import { UsersService } from '../services/users.service';
 
 export function passwordsMatchValidator(): ValidatorFn{     //Cross Validation
   return (control: AbstractControl): ValidationErrors | null => {
@@ -36,15 +38,19 @@ export class SignupComponent implements OnInit {
   hide = true;
 
   constructor(
-    private authService: AuthService, private router: Router, private afAuth: AngularFireAuth) {
+    private authService: AuthService, 
+    private router: Router, 
+    private afAuth: AngularFireAuth, 
+    private usersService: UsersService,
+    private toast: HotToastService) {
     this.isProgressVisible = false;
     this.firebaseErrorMessage = '';
   }
 
   signupForm = new FormGroup({
-  firstName: new FormControl('', Validators.required),
-  lastName: new FormControl('', Validators.required),
-  //gender: new FormControl('', Validators.required),
+  fName: new FormControl('', Validators.required),
+  lName: new FormControl('', Validators.required),
+  gender: new FormControl('', Validators.required),
   email: new FormControl('', [Validators.required, Validators.email]),
   password: new FormControl('',Validators.required),
   confirmPassword: new FormControl('', Validators.required)
@@ -55,37 +61,41 @@ export class SignupComponent implements OnInit {
   }
 
   signup() {
-    if (!this.signupForm.valid)
+    if (!this.signupForm.valid)                 // if there's an error in the form, don't submit it
       return;
     
-    const { firstName, lastName, email, password } = this.signupForm.value;
-    this.authService.signupUser(firstName, lastName, email, password)
+    const { fName, lName, gender, email, password } = this.signupForm.value;
 
-  }
-
-  /*signup() {
-    if (this.signupForm.invalid)                            // if there's an error in the form, don't submit it
-        return;
-
-    this.isProgressVisible = true;
-    this.authService.signupUser(this.signupForm.value).then((result) => {
-        if (result == null)                                 // null is success, false means there was an error
-            this.router.navigate(['/dashboard']);
-        else if (result.isValid == false)
-            this.firebaseErrorMessage = result.message;
-
-        this.isProgressVisible = false;                     // no matter what, when the auth service returns, we hide the progress indicator
-    }).catch(() => {
-        this.isProgressVisible = false;
+    //const profileData = this.signupForm.value;
+    this.authService.signupUser(email, password)
+    .pipe(
+      switchMap(({ user: {uid} }) => 
+        this.usersService.addUser({ 
+          uid, 
+          email, 
+          displayName: fName + ' ' + lName, 
+          firstName: fName, 
+          lastName: lName,
+          gender: gender })
+      ),
+      this.toast.observe({
+        success: 'Congrats! You have signed up.',
+        loading: 'Signing in.',
+        error: ({ message }) => `${message}`
+      })
+    )
+    .subscribe(() => {
+      this.router.navigate(['/dashboard'])
     });
-  }*/
 
-  get firstName() {
-    return this.signupForm.get('firstName');
   }
 
-  get lastName() {
-    return this.signupForm.get('lastName');
+  get fName() {
+    return this.signupForm.get('fName');
+  }
+
+  get lName() {
+    return this.signupForm.get('lName');
   }
 
   get email() {

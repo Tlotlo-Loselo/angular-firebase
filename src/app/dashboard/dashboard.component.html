@@ -13,18 +13,13 @@
 </mat-menu>
 
 <div class="grid-container">
-  <h1 class="mat-h1" *ngIf="user$ | async as user">Welcome to your profile, {{ user.email }}.</h1>
   
   <mat-card class="user-profile" *ngIf="user$ | async as user" >
-    <mat-card-title>Actions Buttons</mat-card-title>
+    <mat-card-title>
+      Welcome to your profile, {{ user.displayName }}.
+    </mat-card-title>
     <mat-card-subtitle>Start</mat-card-subtitle>
-    <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
-      <mat-icon>more_vert</mat-icon>
-    </button>
-    <mat-menu #menu="matMenu" xPosition="before">
-      <button mat-menu-item>Update profile</button>
-      <button mat-menu-item>Remove profile</button>
-    </mat-menu>
+    
 
     <div class="profile-image">
       <img width="120" height="120" [src]="user.photoURL ?? 'assets/images/image-placeholder.jpg' ">
@@ -34,6 +29,24 @@
     </div>
 
     <input #inputField type="file" hidden>   
+
+    <mat-card-content>
+      <mat-list *ngIf="(user$ | async)">
+        <mat-list-item>First Name: {{ (user$ | async)?.firstName }}</mat-list-item>
+        <mat-list-item>Last Name: {{ (user$ | async)?.lastName }}</mat-list-item>
+        <mat-list-item>Gender: {{ (user$ | async)?.gender }}</mat-list-item>
+        <mat-list-item>Email: {{ (user$ | async)?.email }}</mat-list-item>
+        <!--  <mat-list-item>Email Verification Status: {{ (afAuth.user | async)?.emailVerified }}</mat-list-item>  -->
+      </mat-list>
+    </mat-card-content>
+
+    <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu" xPosition="before">
+      <button mat-menu-item (click)="updateUserDialog('3000ms', '1500ms')">Update profile</button>
+      <button mat-menu-item (click)="deleteUserDialog()">Remove profile</button>
+    </mat-menu>
 
   </mat-card>
   <br>

@@ -11,6 +11,7 @@ import { concatMap, from, Observable, of, switchMap } from 'rxjs';
 import { signInWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { Auth, authState, createUserWithEmailAndPassword } from '@angular/fire/auth';
 import { HotToastService } from '@ngneat/hot-toast';
+import { UsersService } from './users.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,7 @@ export class AuthService {
   userData: any; // Save logged in user data
 
   constructor(
+
     private toast: HotToastService,
     private auth: Auth,
     public afs: AngularFirestore,   // Inject Firestore service
@@ -33,21 +35,11 @@ export class AuthService {
 
 
 
-  // Sign up with email/password
+  // Sign up with email & password
 
-    signupUser(fName: string, lName: string, email: string, password: string) {
+    signupUser(email: string, password: string) {
       return from(createUserWithEmailAndPassword(this.auth, email, password))
-      .pipe(
-        switchMap(({ user }) => updateProfile(user, {displayName: fName + ' ' + lName})),
-        this.toast.observe({
-          success: 'Congrats! You have signed up.',
-          loading: 'Signing in.',
-          error: ({ message }) => `${message}`
-        })
-      )
-      .subscribe(() => {
-        this.router.navigate(['/dashboard'])
-      });
+      
     }
 
   /*signupUser(user: any): Promise<any> {

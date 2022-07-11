@@ -15,19 +15,19 @@
         <div class="first-name-container input-fields">
             <mat-form-field appearance="fill">
                 <mat-label>Enter your first name.</mat-label>
-                <input matInput placeholder="Pat" ngModel formControlName="firstName" #userName required>
-                  <mat-error *ngIf="firstName?.errors?.['required']"> First name is required </mat-error>     
+                <input matInput placeholder="Pat" ngModel formControlName="fName" #userName required>
+                  <mat-error *ngIf="fName?.errors?.['required']"> First name is required </mat-error>     
             </mat-form-field>
         </div>
 
         <div class="last-name-container input-fields">
             <mat-form-field appearance="fill">
                 <mat-label>Enter surname</mat-label>
-                <input matInput placeholder="Noah" ngModel formControlName="lastName" #surname required>
-                <mat-error *ngIf="lastName?.errors?.['required']"> Last name is required </mat-error> 
+                <input matInput placeholder="Noah" ngModel formControlName="lName" #surname required>
+                <mat-error *ngIf="lName?.errors?.['required']"> Last name is required </mat-error> 
             </mat-form-field>
         </div>
-<!--        <div class="gender-container input-fields">
+        <div class="gender-container input-fields">
             <mat-form-field appearance="fill">
                 <mat-label>Gender</mat-label>
                 <mat-select #userGender formControlName="gender">
@@ -37,7 +37,6 @@
                 <mat-hint>Gender required</mat-hint>
               </mat-form-field>
         </div>
--->
         <div class="email-container input-fields">
             <mat-form-field appearance="fill">
                 <mat-label>Enter your email</mat-label>

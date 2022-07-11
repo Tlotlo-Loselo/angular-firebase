@@ -6,6 +6,16 @@ import { User } from 'firebase/auth';
 import { ImageUploadService } from '../services/image-upload.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { FormControl, FormGroup } from '@angular/forms';
+import { UsersService } from '../services/users.service';
+import { Router } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { user } from '@angular/fire/auth';
+
+import { MatDialog, MatDialogRef} from '@angular/material/dialog';
+import { UpdateDialogComponent } from '../update-dialog/update-dialog.component';
+import { DeleteUserDialogComponent } from '../delete-user-dialog/delete-user-dialog.component';
+
+@UntilDestroy()
 
 @Component({
   selector: 'app-dashboard',
@@ -14,7 +24,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class DashboardComponent implements OnInit {
 
-  user$ = this.authService.currentUser$;
+  user$ = this.usersService.currentUserProfile$;
 
   profileForm = new FormGroup (
     {
@@ -33,10 +43,25 @@ export class DashboardComponent implements OnInit {
     private breakpointObserver: BreakpointObserver, 
     public authService: AuthService, 
     //private imageUploadService: ImageUploadService,
-    private toast: HotToastService) {}
+    private toast: HotToastService,
+    private router: Router,
+    private usersService: UsersService,
+    private dialog: MatDialog) {}
 
   ngOnInit(): void {
+    this.usersService.currentUserProfile$
+    .pipe(untilDestroyed(this))
+    .subscribe((user) => {
+      this.profileForm.patchValue({ ...user });
+    });
     
+  }
+
+  updateUserDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    this.dialog.open(UpdateDialogComponent, {
+      width: '250px',
+
+    });
   }
 
 /*  uploadImage(event: any, user: User) {
@@ -51,4 +76,11 @@ export class DashboardComponent implements OnInit {
       //concatMap((photoURL) => this.authService.updateProfileData({photoURL}))
     ).subscribe();
   }     */
+
+  deleteUserDialog() {
+    this.dialog.open(DeleteUserDialogComponent, {
+      width: '250px'
+    });
+  }
+
 }

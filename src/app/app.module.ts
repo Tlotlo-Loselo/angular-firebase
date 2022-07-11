@@ -15,6 +15,7 @@ import { LoginComponent } from './login/login.component';
 import { MatCardModule } from '@angular/material/card';
 import { HomeComponent } from './home/home.component';
 
+import { MatListModule } from '@angular/material/list';
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -34,6 +35,9 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { AuthService } from './services/auth.service';
 import { HotToastModule } from '@ngneat/hot-toast';
+import { UpdateDialogComponent } from './update-dialog/update-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { DeleteUserDialogComponent } from './delete-user-dialog/delete-user-dialog.component';
 
 
 @NgModule({
@@ -42,7 +46,9 @@ import { HotToastModule } from '@ngneat/hot-toast';
     SignupComponent,
     LoginComponent,
     HomeComponent,
-    DashboardComponent
+    DashboardComponent,
+    UpdateDialogComponent,
+    DeleteUserDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -64,6 +70,8 @@ import { HotToastModule } from '@ngneat/hot-toast';
     LayoutModule,
     MatSelectModule,
     MatToolbarModule,
+    MatListModule,
+    MatDialogModule,
 
     HttpClientModule,
 
